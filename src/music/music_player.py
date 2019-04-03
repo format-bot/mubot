@@ -1,10 +1,11 @@
-import pafy
-import requests
-import wave
-import pyaudio
 import time
-from multiprocessing import Process, Manager
+import wave
+from multiprocessing import Manager, Process
 
+import requests
+
+import pafy
+import pyaudio
 from music import analyzer
 
 API_ENDPOINT = "https://www.googleapis.com/youtube/v3/search"
@@ -16,7 +17,7 @@ PARAMS = {
     "maxResults": 1,
     "order": "relevance",
     "type": "video",
-    "fields": "items(id/videoId,snippet/title)"
+    "fields": "items(id/videoId,snippet/title)",
 }
 
 
@@ -37,8 +38,7 @@ def play_from_search(query, callback):
     t2 = time.time()
     print("Time taken to transcode: {0:.6f}".format(t2 - t1))
     peaks = Manager().list()
-    analyzer_process = Process(
-        target=analyzer.analyze, args=(transcoded, peaks))
+    analyzer_process = Process(target=analyzer.analyze, args=(transcoded, peaks))
     analyzer_process.start()
     time.sleep(2)
     _play(transcoded, peaks, callback)
@@ -53,10 +53,12 @@ def _play(filename, peaks, callback):
     # instantiate PyAudio
     p = pyaudio.PyAudio()
     # open stream
-    stream = p.open(format=p.get_format_from_width(f.getsampwidth()),
-                    channels=f.getnchannels(),
-                    rate=f.getframerate(),
-                    output=True)
+    stream = p.open(
+        format=p.get_format_from_width(f.getsampwidth()),
+        channels=f.getnchannels(),
+        rate=f.getframerate(),
+        output=True,
+    )
     ind = 0
     data = f.readframes(CHUNK_SIZE)
     while data:

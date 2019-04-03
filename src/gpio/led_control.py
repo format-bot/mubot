@@ -1,5 +1,6 @@
-import pigpio
 import time
+
+import pigpio
 
 # LEDController is used to change the intensity of the red, green and blue LEDs on the robot.
 # pigpio uses BCM pin numbers
@@ -10,6 +11,7 @@ BLUE = 22
 PINS_USED = [RED, GREEN, BLUE]
 PI = pigpio.pi()
 
+
 class LEDController(object):
     def __init__(self):
         for pin in PINS_USED:
@@ -19,9 +21,9 @@ class LEDController(object):
 
     def set_r(self, intensity):
         PI.set_PWM_dutycycle(RED, intensity * 0.9)
-    
+
     def set_g(self, intensity):
-        PI.set_PWM_dutycycle(GREEN,intensity * 0.8)
+        PI.set_PWM_dutycycle(GREEN, intensity * 0.8)
 
     def set_b(self, intensity):
         PI.set_PWM_dutycycle(BLUE, intensity)

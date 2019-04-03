@@ -1,10 +1,11 @@
-import numpy as np
-from scipy.fftpack import rfft
-from scipy.io import wavfile
 import subprocess
 import time
 
-#Performs a fast fourier transform and compares the mean "energy" of each section using spectral flux onset detection in order to detect which 1024 bit chunks are beats.
+import numpy as np
+from scipy.fftpack import rfft
+from scipy.io import wavfile
+
+# Performs a fast fourier transform and compares the mean "energy" of each section using spectral flux onset detection in order to detect which 1024 bit chunks are beats.
 
 CHUNK_SIZE = 1024
 SAMPLE_RATE = 16000
@@ -12,6 +13,7 @@ BIT_RATE = 10000
 
 MAX_DURATION = 120
 THRESHOLD = 1.28
+
 
 def analyze(filename, peak_array):
     t1 = time.time()
@@ -33,7 +35,7 @@ def analyze(filename, peak_array):
 
     for index, window in enumerate(audio):
         lastSpectrum = spectrum
-        spectrum = np.abs(rfft(window)[:CHUNK_SIZE // 2])
+        spectrum = np.abs(rfft(window)[: CHUNK_SIZE // 2])
         flux = 0.0
         for i in range(min(len(lastSpectrum), len(spectrum))):
             currFlux = spectrum[i] - lastSpectrum[i]
@@ -47,17 +49,17 @@ def analyze(filename, peak_array):
             ubound = min(len(spectralFlux) - 1, i + thresholdWindow)
             for j in range(lbound, ubound + 1):
                 mean += spectralFlux[j]
-            mean /= (ubound - lbound)
+            mean /= ubound - lbound
             thresholds.append(mean * THRESHOLD)
-            if (thresholds[i] <= spectralFlux[i]):
+            if thresholds[i] <= spectralFlux[i]:
                 goodFluxValues.append(spectralFlux[i] - thresholds[i])
             else:
                 goodFluxValues.append(0)
             if i > 0 and (goodFluxValues[i - 1] > goodFluxValues[i]):
-                if i == 0 or peak_array[i-1] == 0:
-                  peak_array.append(goodFluxValues[i - 1])
+                if i == 0 or peak_array[i - 1] == 0:
+                    peak_array.append(goodFluxValues[i - 1])
                 else:
-                  peak_array.append(0)
+                    peak_array.append(0)
             else:
                 peak_array.append(0)
     peak_array.append(-1)
@@ -72,7 +74,7 @@ def transcode(filename):
         "-t " + str(MAX_DURATION),
         "-ar " + str(SAMPLE_RATE),
         "-ab " + str(BIT_RATE),
-        newname
+        newname,
     ]
     subprocess.call(command + " " + " ".join(arguments), shell=True)
     return newname

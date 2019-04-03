@@ -3,10 +3,18 @@ from collections import deque
 
 # DanceQueue class generates, queues and executes dance moves
 
-POSES = [(180, 0, -1, -1), (0, 180, -1, -1), (45, 45, -1, 180),
-         (135, 135, -1, 0), (90, 180, 45, 135), (0, 90, 135, 45),
-         (45, -1, 180, 75), (-1, 45, 0, 105), (-1, -1, -1, 90),
-         (90, 90, 90, 90)]
+POSES = [
+    (180, 0, -1, -1),
+    (0, 180, -1, -1),
+    (45, 45, -1, 180),
+    (135, 135, -1, 0),
+    (90, 180, 45, 135),
+    (0, 90, 135, 45),
+    (45, -1, 180, 75),
+    (-1, 45, 0, 105),
+    (-1, -1, -1, 90),
+    (90, 90, 90, 90),
+]
 
 
 class DanceQueue(object):
@@ -34,7 +42,7 @@ class DanceQueue(object):
             self.servo_controller.move_arm_l,
             self.servo_controller.move_arm_r,
             self.servo_controller.move_body,
-            self.servo_controller.move_head
+            self.servo_controller.move_head,
         ]
         for i, position in enumerate(pose):
             if position != -1:

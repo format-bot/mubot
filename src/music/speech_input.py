@@ -1,15 +1,17 @@
 import speech_recognition as sr
 
+
 def _parse_nlp(result):
     query = None
     print(result)
     entities = result.split()
-    command = entities[0].lower().strip('.')
+    command = entities[0].lower().strip(".")
     if command == "play" and len(entities) <= 1:
         return None
     if command == "play":
-      query = " ".join(entities[1:]).lower()
+        query = " ".join(entities[1:]).lower()
     return (command, query)
+
 
 def _recognize(recognizer, audio):
     print("Listening for speech...")
@@ -32,5 +34,3 @@ def start(callback):
         r.adjust_for_ambient_noise(source)
         phrase = r.listen(source, phrase_time_limit=3.5)
         callback(_recognize(r, phrase))
-
-    

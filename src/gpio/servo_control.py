@@ -1,7 +1,8 @@
-import pigpio
 import time
 
-#ServoController is used to change the position of each member (arms, torso, head) of the robot
+import pigpio
+
+# ServoController is used to change the position of each member (arms, torso, head) of the robot
 # pigpio uses BCM pin numbers
 SERVO_HEAD = 2
 SERVO_BODY = 3
@@ -11,12 +12,12 @@ PINS_USED = [SERVO_ARM_L, SERVO_ARM_R, SERVO_HEAD, SERVO_BODY]
 PI = pigpio.pi()
 PWM_RANGE = (750, 2500)
 
-'''
+"""
 The selected pulsewidth will continue to be transmitted until changed by a subsequent
 call to set_servo_pulsewidth.
 The pulsewidths supported by servos varies and should probably be determined by experiment.
 A value of 1500 should always be safe and represents the mid-point of rotation.
-'''
+"""
 
 
 class ServoController(object):
@@ -55,4 +56,4 @@ def _angle_to_pulse_width(angle):
     if angle < 0:
         return 0
     pw_range = PWM_RANGE[1] - PWM_RANGE[0]
-    return (PWM_RANGE[0] + pw_range * angle / 180)
+    return PWM_RANGE[0] + pw_range * angle / 180
